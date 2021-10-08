@@ -1,10 +1,32 @@
 const db = require('./../../data/dbConfig');
 
-function getTasks(){};
+async function getTasks(){
+    const tasksNoBool = await db('tasks as t')
+    .leftJoin('projects as p', 'p.project_id', 't.project_id' )    
+    .select('t.task_id', 't.task_description', 't.task_notes', 't.task_completed', 'p.project_name', 'p.project_description')
 
-function createTask(newTask){};
+    const tasksBool = tasksNoBool.map(task => {
+        if(!task.task_completed){
+            return {
+                ...task, 
+                task_completed: false
+            }
+        } else {
+            return {
+                ...task,
+                task_completed: true
+            }
+        }
+    })
+    return tasksBool;
+}
+
+function getTaskById(task_id){}
+
+function createTask(newTask){}
 
 module.exports = {
     getTasks,
+    getTaskById,
     createTask
 }
