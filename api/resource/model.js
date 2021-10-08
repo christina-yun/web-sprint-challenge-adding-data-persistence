@@ -1,6 +1,8 @@
 const db = require('./../../data/dbConfig');
 
-function getResources(){};
+function getResources(){
+    return db('resources').select('*')
+};
 
 function createResource(newResource){};
 
