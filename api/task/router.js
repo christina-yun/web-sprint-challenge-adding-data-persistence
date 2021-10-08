@@ -4,9 +4,6 @@ const Tasks = require('./model');
 const router = express.Router();
  
 // [GET] /api/tasks
-// Even though task_completed is stored as an integer, the API uses booleans when interacting with the client
-// Each task must include project_name and project_description
-// Example of response body: [{"task_id":1,"task_description":"baz","task_notes":null,"task_completed":false,"project_name:"bar","project_description":null}]
 router.get('/', (req, res, next) => {
     Tasks.getTasks()
         .then(tasks => {
@@ -14,11 +11,16 @@ router.get('/', (req, res, next) => {
         })
         .catch(next)
 });
+// [GET] /api/tasks/:task_id
+router.get('/:task_id', (req, res, next) => {
+    Tasks.getTaskById(req.params.task_id)
+        .then(task => {
+            res.json(task)
+        })
+        .catch(next)
+})
 
 // [POST] /api/tasks
-// Even though task_completed is stored as an integer, the API uses booleans when interacting with the client
-// Example of response body: {"task_id":1,"task_description":"baz","task_notes":null,"task_completed":false,"project_id:1}
-
 router.post('/', (req, res, next) => {
     Tasks.createTask(req.body)
         .then(newTask => {

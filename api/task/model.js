@@ -21,7 +21,19 @@ async function getTasks(){
     return tasksBool;
 }
 
-function getTaskById(task_id){}
+async function getTaskById(task_id){
+    const tasksNoBool = await db('tasks as t')
+        .leftJoin('projects as p', 'p.project_id', 't.project_id')
+        .select('t.task_id', 't.task_description', 't.task_notes', 't.task_completed', 'p.project_name', 'p.project_description')
+        .where('task_id', task_id)
+        .first()
+
+    const taskBool = !tasksNoBool
+        ? { ...tasksNoBool, task_completed: false}
+        : { ...tasksNoBool, task_completed: true }
+
+    return taskBool;
+}
 
 async function createTask(newTask){
     const newId = await db('tasks').insert(newTask);
