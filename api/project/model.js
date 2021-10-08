@@ -34,18 +34,17 @@ async function getProjectById(project_id){
     }
 }
 
-//this test isn't passing for some reason
 async function createProject(newProject){
-    const addBool = !newProject.project_completed === null
-        ?  { ...newProject, project_completed: false }
-        : { ... newProject, project_completed: true };
-        
-    const newId = await db('projects').insert(addBool);
+    const newId = await db('projects').insert(newProject);
 
     const createdProject = await getProjectById(newId)
 
-    console.log(createdProject)
-    return createdProject;
+    const addBool = !createdProject.project_completed
+        ?  { ...createdProject, project_completed: false }
+        : { ... createdProject, project_completed: true };
+        
+
+    return addBool;
 }
 
 module.exports = {
