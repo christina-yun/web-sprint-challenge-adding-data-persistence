@@ -23,7 +23,16 @@ async function getTasks(){
 
 function getTaskById(task_id){}
 
-function createTask(newTask){}
+async function createTask(newTask){
+    const newId = await db('tasks').insert(newTask);
+    const createdTask = await db('tasks').select('*').where('task_id', newId).first()
+
+    const changeToBoolean = !createdTask.task_completed
+        ? { ...createdTask, task_completed: false }
+        : { ...createdTask, task_completed: true}
+
+    return changeToBoolean;
+}
 
 module.exports = {
     getTasks,

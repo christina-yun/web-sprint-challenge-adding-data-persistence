@@ -21,7 +21,7 @@ async function getProjects(){
 
 async function getProjectById(project_id){
     const projectNoBool = await db('projects').select('*').where('project_id', project_id).first();
-    if(!projectNoBool){
+    if(!projectNoBool.project_completed){
         return {
             ...projectNoBool,
             project_completed: false
@@ -36,14 +36,15 @@ async function getProjectById(project_id){
 
 //this test isn't passing for some reason
 async function createProject(newProject){
-    const addBool = !newProject.project_completed 
+    const addBool = !newProject.project_completed === null
         ?  { ...newProject, project_completed: false }
         : { ... newProject, project_completed: true };
         
     const newId = await db('projects').insert(addBool);
 
-    const createdProject = getProjectById(newId)
+    const createdProject = await getProjectById(newId)
 
+    console.log(createdProject)
     return createdProject;
 }
 
